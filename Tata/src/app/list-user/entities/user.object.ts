@@ -5,7 +5,7 @@ export class Usuarios {
     last_name: string;
     avatar: string
 }
-export class CreateUser {
+export class Cliente {
     nombre: string;
     trabajo: string;
 }

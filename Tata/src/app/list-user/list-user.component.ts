@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GenericMessage } from '../app-core/core/message/genericmessage';
 import { GeneralService } from '../app-core/core/services/general.service';
 import { DefaultConfig } from '../utilities/defaultconfig';
-import { CreateUser, Usuarios } from './entities/user.object';
+import { Cliente, Usuarios } from './entities/user.object';
 
 @Component({
   selector: 'app-list-user',
@@ -16,13 +16,14 @@ export class ListUserComponent implements OnInit {
   recordForm: FormGroup;
   submit: boolean;
   message: GenericMessage;
-  showModal: boolean;
+  modalTitle: string;
+  idUser: number;
   constructor(private readonly generalService: GeneralService,
     private readonly formBuilder: FormBuilder) {
     this.listUser = new Array<Usuarios>();
     this.submit = false;
     this.message = new GenericMessage();
-    this.showModal = false;
+    this.modalTitle = DefaultConfig.DEFAULT_TEXT_APP.titleCreate;
   }
 
   ngOnInit(): void {
@@ -34,7 +35,7 @@ export class ListUserComponent implements OnInit {
    *
    * @memberof ListUserComponent
    */
-   getInformationUser(): void {
+  getInformationUser(): void {
     this.generalService.getListUser(this.pageStart).subscribe((rs: any) => {
       this.listUser = rs.data;
     });
@@ -60,13 +61,42 @@ export class ListUserComponent implements OnInit {
    *
    * @memberof ListUserComponent
    */
-  saveUser() {
+  saveUser(modalTitle?: string) {
+    switch (modalTitle) {
+      case DefaultConfig.DEFAULT_TEXT_APP.titleCreate: {
+        this.createUser();
+        break;
+      }
+      case DefaultConfig.DEFAULT_TEXT_APP.titleUpdate: {
+        this.updateUser();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+  }
+  updateUser() {
     if (this.recordForm.invalid) {
       this.submit = true;
     } else {
-      const items = new CreateUser();
-      items.nombre = this.recordForm.controls.nombre.value;
-      items.trabajo = this.recordForm.controls.trabajo.value;
+      let items = new Cliente();
+      items = this.prepareInformation();
+      this.generalService.updateuser(this.idUser, items).subscribe((rs: any) => {
+        if (rs) {
+          this.message.showMessage('success', DefaultConfig.DEFAULT_TEXT_APP.mensajeUpdate, 3000, 'Actualizo');
+          this.closeModal();
+        }
+      });
+    }
+  }
+  createUser() {
+    if (this.recordForm.invalid) {
+      this.submit = true;
+    } else {
+      let items = new Cliente();
+      items = this.prepareInformation();
       this.generalService.insertUser(items).subscribe((rs: any) => {
         if (rs) {
           this.recordForm.reset();
@@ -76,7 +106,12 @@ export class ListUserComponent implements OnInit {
       });
     }
   }
-
+  prepareInformation(): Cliente {
+    const elemento = new Cliente();
+    elemento.nombre = this.recordForm.controls.nombre.value;
+    elemento.trabajo = this.recordForm.controls.trabajo.value;
+    return elemento;
+  }
   /**
    * Elimina datos.
    *
@@ -85,7 +120,7 @@ export class ListUserComponent implements OnInit {
    */
   deleteUser(Id: number) {
     this.generalService.deleteUser(Id).subscribe((rs: any) => {
-      if (rs) {
+      if (rs === null) {
         this.message.showMessage('success', DefaultConfig.DEFAULT_TEXT_APP.mensajeDelete, 3000, 'Elimino');
       }
     });
@@ -99,13 +134,15 @@ export class ListUserComponent implements OnInit {
    * @memberof ListUserComponent
    */
   openModal(item?: any, isUpdate?: boolean) {
-    this.showModal = true;
     if (isUpdate) {
       this.recordForm.patchValue({
         nombre: item.first_name,
         trabajo: item.last_name
       });
+      this.idUser = item.id;
+      this.modalTitle = DefaultConfig.DEFAULT_TEXT_APP.titleUpdate;
     } else {
+      this.modalTitle = DefaultConfig.DEFAULT_TEXT_APP.titleCreate;
       this.recordForm.reset();
     }
   }
