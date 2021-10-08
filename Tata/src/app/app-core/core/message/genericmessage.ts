@@ -28,7 +28,6 @@ export class GenericMessage {
    * @memberof GenericMessage
    */
   public showDetail(item: any) {
-    debugger;
     Swal.fire({
       title: `${item.first_name} ${item.last_name}`,
       text: item.email,
