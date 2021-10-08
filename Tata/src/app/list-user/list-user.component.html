@@ -1,4 +1,9 @@
-<div class="mt-4">
+<div class="container mt-4">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+        (click)="openModal('', false)">
+        Create
+        <i class="far fa-plus-square"></i>
+    </button>
     <div style="overflow-x:auto;">
         <table>
             <tr>
@@ -8,7 +13,7 @@
                 <th>Avatar</th>
                 <th>Actions</th>
             </tr>
-            <tr *ngFor="let item of this.listaUsuarios | paginate: { itemsPerPage: 4, currentPage: pageStart }">
+            <tr *ngFor="let item of this.listUser | paginate: { itemsPerPage: 4, currentPage: pageStart }">
                 <td>{{item.first_name}} </td>
                 <td>{{item.last_name}} </td>
                 <td>{{item.email}}</td>
@@ -19,10 +24,11 @@
                     <button type="button" class="btn btn-secondary">
                         <i class="far fa-eye"></i>
                     </button>
-                    <button type="button" class="btn btn-success">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop" (click)="openModal(item, true)">
                         <i class="far fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-danger">
+                    <button type="button" class="btn btn-danger" (click)="deleteUser(item.id)">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -31,10 +37,6 @@
         <pagination-controls (pageChange)="pageStart = $event"></pagination-controls>
     </div>
 </div>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Launch static backdrop modal
-</button>
-
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -49,9 +51,8 @@
                     <div class="flex-container">
                         <div class="flex-item-left">
                             <label for="nombre"><strong>Name</strong> </label>
-                            <input name="nombre" formControlName="nombre" id="Fnombre" type="text"
-                                placeholder="Ingrese Nombre" class="form-control"
-                                [class.is-invalid]="submit && genericControl.nombre.errors">
+                            <input name="nombre" formControlName="nombre" id="Fnombre" type="text" placeholder="Name"
+                                class="form-control" [class.is-invalid]="submit && genericControl.nombre.errors">
                             <div *ngIf="submit && genericControl.nombre.errors" class="invalid-feedback">
                                 <div *ngIf="genericControl.nombre.errors?.required">
                                     Requerido
@@ -60,11 +61,11 @@
                         </div>
                         <div class="flex-item-right">
                             <label for="apellido"><strong>Work</strong></label>
-                            <input name="apellido" formControlName="apellido" id="Lapellido" type="text"
-                                placeholder="Ingrese Apellido" class="form-control"
-                                [class.is-invalid]="submit && genericControl.apellido.errors">
-                            <div *ngIf="submit && genericControl.apellido.errors" class="invalid-feedback">
-                                <div *ngIf="genericControl.apellido.errors?.required">
+                            <input name="apellido" formControlName="trabajo" id="Lapellido" type="text"
+                                placeholder="Work" class="form-control"
+                                [class.is-invalid]="submit && genericControl.trabajo.errors">
+                            <div *ngIf="submit && genericControl.trabajo.errors" class="invalid-feedback">
+                                <div *ngIf="genericControl.trabajo.errors?.required">
                                     Requerido
                                 </div>
                             </div>
@@ -73,8 +74,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveUser()">Save</button>
             </div>
         </div>
     </div>
