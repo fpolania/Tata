@@ -20,4 +20,22 @@ export class GenericMessage {
       timer: timer,
     });
   }
+
+  /**
+   * Muestra el detalle del registro seleccionado
+   *
+   * @param {*} item
+   * @memberof GenericMessage
+   */
+  public showDetail(item: any) {
+    debugger;
+    Swal.fire({
+      title: `${item.first_name} ${item.last_name}`,
+      text: item.email,
+      imageUrl: item.avatar,
+      imageWidth: 400,
+      imageHeight: 200,
+      imageAlt: 'Custom image',
+    })
+  }
 }

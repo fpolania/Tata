@@ -18,12 +18,14 @@ export class ListUserComponent implements OnInit {
   message: GenericMessage;
   modalTitle: string;
   idUser: number;
+  viewDatail: boolean;
   constructor(private readonly generalService: GeneralService,
     private readonly formBuilder: FormBuilder) {
     this.listUser = new Array<Usuarios>();
     this.submit = false;
     this.message = new GenericMessage();
     this.modalTitle = DefaultConfig.DEFAULT_TEXT_APP.titleCreate;
+    this.viewDatail = false;
   }
 
   ngOnInit(): void {
@@ -155,5 +157,8 @@ export class ListUserComponent implements OnInit {
   closeModal() {
     const modal = document.getElementById('closeModal') as HTMLButtonElement;
     modal.click();
+  }
+  viewDetail(item: any) {
+    this.message.showDetail(item);
   }
 }

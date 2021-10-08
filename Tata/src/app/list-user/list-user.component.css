@@ -31,3 +31,7 @@ tr:nth-child(even) {
     flex: 10%;
     flex-grow: 1;
 }
+
+.viewDatail:hover {
+    visibility: visible;
+}

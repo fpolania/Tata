@@ -21,7 +21,7 @@
                     <img [src]="item.avatar" alt="avatar">
                 </td>
                 <td>
-                    <button type="button" class="btn btn-secondary">
+                    <button type="button" class="btn btn-secondary" (click)="viewDetail(item)">
                         <i class="far fa-eye"></i>
                     </button>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
